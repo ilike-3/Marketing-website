@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>বিপণন প্রশ্নোত্তর – সুন্দর ডিজাইন (HTML/CSS/JS)</title>
+<style>
+  :root{
+    --bg: #ffffff; --bg2:#fafafa; --text:#0b0b0d; --muted:#666a73;
+    --card:#ffffffcc; --border:#e5e7eb; --grad1:#6366f1; --grad2:#06b6d4;
+    --chip:#f7f8ff; --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  }
+  :root.dark{
+    --bg:#0b0b12; --bg2:#0f1117; --text:#eef1f6; --muted:#a3a7b3;
+    --card:#0f1117cc; --border:#262a36; --chip:#121826; --shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    color:var(--text); background: linear-gradient(180deg,var(--bg),var(--bg2));
+  }
+  .container{max-width:1080px;margin:auto;padding:0 16px}
+  .header{ position:sticky; top:0; backdrop-filter: blur(8px);
+    background: color-mix(in oklab, var(--bg) 80%, transparent);
+    border-bottom:1px solid var(--border); z-index:20;
+  }
+  .header-inner{display:flex;align-items:center;gap:12px;padding:12px 0}
+  .brand{
+    display:flex;align-items:center;gap:10px;font-weight:800;
+    background:linear-gradient(135deg,var(--grad1),var(--grad2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size: clamp(18px,2.2vw,24px);
+  }
+  .subtitle{color:var(--muted);font-size:13px;margin-top:-2px}
+  .toolbar{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .search{
+    display:none; align-items:center; gap:8px; border:1px solid var(--border); border-radius:14px; padding:8px 10px;
+    background:var(--card)
+  }
+  .search input{border:0;outline:0;background:transparent;color:var(--text);width:220px;font-size:14px}
+  @media (min-width: 768px){ .search{display:flex}}
+  .btn{border:1px solid var(--border); background:var(--card); border-radius:14px; padding:8px 12px; cursor:pointer;}
+  .btn:hover{filter:brightness(1.05)}
+  .grid{display:grid; gap:12px}
+  .g-quick{grid-template-columns: repeat(2, minmax(0,1fr))}
+  @media (min-width:640px){.g-quick{grid-template-columns: repeat(3,1fr)}}
+  @media (min-width:1024px){.g-quick{grid-template-columns: repeat(7,1fr)}}
+  .card{
+    border:1px solid var(--border); background:var(--card); border-radius:18px; padding:14px; box-shadow:var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{transform: translateY(-2px); box-shadow: 0 16px 32px rgba(16,24,40,.12)}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;
+    padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,#f6f7ff,#effaff);
+    border:1px solid #e2e8ff;
+  }
+  :root.dark .chip{background:linear-gradient(90deg,#0f1630,#071e27); border-color:#1b2a4d}
+  section{scroll-margin-top:90px}
+  h2{font-size:22px;margin:0 0 12px}
+  .sec-head{display:flex;align-items:center;gap:10px;margin:34px 0 12px}
+  .icon-badge{display:inline-flex;align-items:center;justify-content:center;padding:8px;border-radius:14px;
+    background:linear-gradient(135deg, color-mix(in oklab, var(--grad1) 15%, transparent), color-mix(in oklab, var(--grad2) 15%, transparent));
+  }
+  .qa-grid{display:grid; gap:12px}
+  @media (min-width:768px){.qa-grid{grid-template-columns: repeat(2, 1fr)}}
+  .qa{cursor:pointer}
+  .qa-title{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-weight:700}
+  .qa-ans{max-height:0;overflow:hidden;transition:max-height .25s ease, opacity .25s ease; opacity:0;color:var(--muted)}
+  .qa.open .qa-ans{opacity:1; max-height:300px; margin-top:10px}
+  .pills{display:flex;flex-wrap:wrap;gap:10px}
+  .flow-pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;padding:8px 12px;border-radius:999px;
+    background:linear-gradient(90deg, color-mix(in oklab, var(--grad1) 10%, transparent), color-mix(in oklab, var(--grad2) 10%, transparent));
+    border:1px solid color-mix(in oklab, var(--grad1) 25%, var(--border));
+  }
+  footer{border-top:1px solid var(--border); padding:28px 0; margin-top:36px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:var(--card)}
+  .glow{ position:fixed; inset:0; pointer-events:none; z-index:5; }
+  .glow-dot{
+    position:absolute; width:96px; height:96px; border-radius:999px;
+    background: radial-gradient(40% 40% at 50% 50%, color-mix(in oklab, var(--grad1) 40%, transparent), color-mix(in oklab, var(--grad2) 30%, transparent));
+    filter: blur(18px); opacity:.28; transform: translate(-50%,-50%); transition: transform .08s linear;
+  }
+  .msearch{display:flex;gap:8px;border:1px solid var(--border);border-radius:14px;padding:8px 10px;background:var(--card)}
+  .msearch input{border:0;outline:0;background:transparent;color:var(--text);width:100%}
+  @media (min-width:768px){.msearch{display:none}}
+  a:focus,button:focus{outline:2px solid color-mix(in oklab, var(--grad2) 50%, #0000); outline-offset:2px}
+</style>
+</head>
+<body>
+  <!-- cursor glow -->
+  <div class="glow"><div class="glow-dot" id="glow"></div></div>
+
+  <!-- minimal SVG sprite -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v19H6.5A2.5 2.5 0 0 1 4 18.5v-14A2.5 2.5 0 0 1 6.5 2z"/>
+    </symbol>
+    <symbol id="i-boxes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="8" y="13" width="8" height="8" rx="1.5"/>
+    </symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18"/><path d="M12 3a15 15 0 0 0 0 18"/>
+    </symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M9 6h6M6 9l4 6M18 9l-4 6"/>
+    </symbol>
+    <symbol id="i-pkg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/>
+    </symbol>
+    <symbol id="i-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3 21V9l6 4V9l6 4V9l6 4v8H3z"/><path d="M6 21v-3M10 21v-3M14 21v-3M18 21v-3"/>
+    </symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M6 8c0 6 12 2 12 9"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9 6.3 6.3M17.7 17.7 19.1 19.1M4.9 19.1 6.3 17.7M17.7 6.3 19.1 4.9"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>
+    </symbol>
+    <symbol id="i-pointer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M4 4l7 16 2-7 7-2-16-7z"/>
+    </symbol>
+    <symbol id="i-way" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3 12h6l3-4 3 8 3-4h3"/>
+    </symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 3l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 18l-6.2 4 1.2-6.8-5-4.9 6.9-1z"/>
+    </symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3 21s5-10 18-18c0 13-10 18-18 18z"/><path d="M3 21c8-6 12-10 18-18"/>
+    </symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M7 11v-1a2 2 0 1 1 4 0v2M11 12V9a2 2 0 1 1 4 0v3M15 12v-2a2 2 0 1 1 4 0v3"/><path d="M5 12v5a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-4"/>
+    </symbol>
+  </svg>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <span class="icon-badge" aria-hidden="true"><svg width="24" height="24"><use href="#i-book"/></svg></span>
+        <div>
+          <div class="brand">বিপণন প্রশ্নোত্তর – সুন্দর ডিজাইন</div>
+          <div class="subtitle">পরীক্ষাযোগ্য সংজ্ঞা ও ধারণা—দ্রুত মনে রাখার মতো</div>
+        </div>
+        <div class="toolbar">
+          <div class="search">
+            <svg width="18" height="18" style="opacity:.7"><use href="#i-search"/></svg>
+            <input id="searchInput" placeholder="খুঁজুন… (শব্দ/ধারণা)" />
+          </div>
+          <button id="themeBtn" class="btn" title="ডার্ক/লাইট টগল">
+            <svg id="sun" width="20" height="20"><use href="#i-sun"/></svg>
+            <svg id="moon" width="20" height="20" style="display:none"><use href="#i-moon"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="msearch container" style="margin-bottom:10px">
+        <svg width="18" height="18" style="opacity:.7"><use href="#i-search"/></svg>
+        <input id="mSearch" placeholder="খুঁজুন… (শব্দ/ধারণা)" />
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Quick nav -->
+    <nav class="grid g-quick" id="quickNav">
+      <a class="card" href="#micro-env"><span class="chip"><svg width="16" height="16"><use href="#i-boxes"/></svg> মাইক্রো পরিবেশ</span></a>
+      <a class="card" href="#macro-env"><span class="chip"><svg width="16" height="16"><use href="#i-globe"/></svg> ম্যাক্রো পরিবেশ</span></a>
+      <a class="card" href="#seven-p"><span class="chip"><svg width="16" height="16"><use href="#i-flow"/></svg> 7P</span></a>
+      <a class="card" href="#plc"><span class="chip"><svg width="16" height="16"><use href="#i-pkg"/></svg> জীবনচক্র</span></a>
+      <a class="card" href="#consumer-channels"><span class="chip"><svg width="16" height="16"><use href="#i-route"/></svg> ভোগ্যপণ্য চ্যানেল</span></a>
+      <a class="card" href="#industrial-channels"><span class="chip"><svg width="16" height="16"><use href="#i-factory"/></svg> শিল্পপণ্য চ্যানেল</span></a>
+      <a class="card" href="#ethics"><span class="chip"><svg width="16" height="16"><use href="#i-shield"/></svg> নৈতিক নীতি</span></a>
+
+      <!-- New quick links -->
+      <a class="card" href="#crm"><span class="chip"><svg width="16" height="16"><use href="#i-hand"/></svg> CRM</span></a>
+      <a class="card" href="#new-pricing"><span class="chip"><svg width="16" height="16"><use href="#i-star"/></svg> নতুন পণ্যের মূল্য</span></a>
+      <a class="card" href="#branding-elements"><span class="chip"><svg width="16" height="16"><use href="#i-star"/></svg> ব্র্যান্ডিং উপাদান</span></a>
+      <a class="card" href="#branding-importance"><span class="chip"><svg width="16" height="16"><use href="#i-star"/></svg> ব্র্যান্ডিং গুরুত্ব</span></a>
+      <a class="card" href="#purchase-steps"><span class="chip"><svg width="16" height="16"><use href="#i-way"/></svg> ক্রয় ধাপ</span></a>
+      <a class="card" href="#green-marketing"><span class="chip"><svg width="16" height="16"><use href="#i-leaf"/></svg> গ্রিন মার্কেটিং</span></a>
+    </nav>
+
+    <!-- ===== Existing Sections (kept from previous file) ===== -->
+    <section id="micro-env">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-boxes"/></svg></span>
+        <h2>বেষ্টনী (মাইক্রো) বিপণন পরিবেশ</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="প্রতিষ্ঠান Company লক্ষ্য সম্পদ নীতি সিদ্ধান্ত"><div class="qa-title">প্রতিষ্ঠান (Company) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">প্রতিষ্ঠানের লক্ষ্য, সম্পদ ও নীতি—যা বিপণন সিদ্ধান্তকে সরাসরি প্রভাবিত করে।</div></div>
+        <div class="card qa" data-q="সরবরাহকারী Suppliers কাঁচামাল ইনপুট মূল্য দেরি গুণমান"><div class="qa-title">সরবরাহকারী (Suppliers) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">কাঁচামাল/ইনপুট সরবরাহকারী; দেরি বা মূল্যবৃদ্ধি পণ্যমূল্য ও গুণমানে প্রভাব ফেলে।</div></div>
+        <div class="card qa" data-q="মধ্যস্থতাকারী Intermediaries বিতরণ খুচরা পাইকার লজিস্টিকস"><div class="qa-title">মধ্যস্থতাকারী ব্যবসায়ী (Marketing Intermediaries) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">বিতরণকারী, খুচরা/পাইকার, লজিস্টিকস—যারা পণ্যকে ভোক্তার কাছে পৌঁছে দেয়।</div></div>
+        <div class="card qa" data-q="ক্রেতা Customers ভোক্তা শিল্প পুনর্বিক্রেতা চাহিদা বাজার"><div class="qa-title">ক্রেতা (Customers) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">ভোক্তা/শিল্প/পুনর্বিক্রেতা—চাহিদাই বাজার নির্ধারণ করে।</div></div>
+        <div class="card qa" data-q="প্রতিযোগী Competitors মূল্য মান প্রচারণা চাপ"><div class="qa-title">প্রতিযোগিতা (Competitors) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">সমমান বিকল্পের উপস্থিতি মূল্য, মান ও প্রচারণায় চাপ বাড়ায়।</div></div>
+        <div class="card qa" data-q="জনগোষ্ঠী Publics মিডিয়া আর্থিক কমিউনিটি মতামত সমর্থন"><div class="qa-title">জনগোষ্ঠী/জনসমষ্টি (Publics) <span aria-hidden="true"><svg width="18" height="18"><use href="#i-way"/></svg></span></div><div class="qa-ans">মিডিয়া, আর্থিক প্রতিষ্ঠান, কমিউনিটি—যাদের মতামত ও সমর্থন জরুরি।</div></div>
+      </div>
+    </section>
+
+    <section id="macro-env">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-globe"/></svg></span>
+        <h2>সামষ্টিক (ম্যাক্রো) বিপণন পরিবেশ</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="জনসংখ্যাগত বয়স লিঙ্গ আয় শিক্ষা নগরায়ণ"><div class="qa-title">জনসংখ্যাগত উপাদান</div><div class="qa-ans">বয়স, লিঙ্গ, আয়, শিক্ষা, নগরায়ণ ইত্যাদি।</div></div>
+        <div class="card qa" data-q="অর্থনৈতিক আয় মুদ্রাস্ফীতি সুদহার কর্মসংস্থান"><div class="qa-title">অর্থনৈতিক উপাদান</div><div class="qa-ans">আয়, মুদ্রাস্ফীতি, সুদহার, কর্মসংস্থান।</div></div>
+        <div class="card qa" data-q="প্রাকৃতিক জলবায়ু সম্পদ পরিবেশ ঝুঁকি"><div class="qa-title">প্রাকৃতিক উপাদান</div><div class="qa-ans">জলবায়ু, সম্পদের প্রাপ্যতা, পরিবেশ-ঝুঁকি।</div></div>
+        <div class="card qa" data-q="প্রযুক্তিগত উদ্ভাবন অটোমেশন ডিজিটাল প্ল্যাটফর্ম"><div class="qa-title">প্রযুক্তিগত উপাদান</div><div class="qa-ans">উদ্ভাবন, অটোমেশন, ডিজিটাল প্ল্যাটফর্ম।</div></div>
+        <div class="card qa" data-q="রাজনৈতিক আইনগত নীতিমালা আইন নিয়ন্ত্রক"><div class="qa-title">রাজনৈতিক/আইনগত উপাদান</div><div class="qa-ans">নীতিমালা, আইন, নিয়ন্ত্রক সংস্থা।</div></div>
+        <div class="card qa" data-q="সামাজিক সাংস্কৃতিক মূল্যবোধ রীতি জীবনধারা"><div class="qa-title">সামাজিক-সাংস্কৃতিক উপাদান</div><div class="qa-ans">মূল্যবোধ, রীতি, জীবনধারা, সংস্কৃতি।</div></div>
+      </div>
+    </section>
+
+    <section id="seven-p">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-flow"/></svg></span>
+        <h2>বিপণনে 7P</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="Product পণ্য বৈশিষ্ট্য মান ব্র্যান্ড প্যাকেজিং গ্যারান্টি"><div class="qa-title">পণ্য (Product)</div><div class="qa-ans">বৈশিষ্ট্য, মান, ব্র্যান্ড, প্যাকেজিং, গ্যারান্টি।</div></div>
+        <div class="card qa" data-q="Price মূল্য দাম ছাড় অর্থপ্রদান শর্ত"><div class="qa-title">মূল্য (Price)</div><div class="qa-ans">দাম নির্ধারণ, ছাড়, অর্থপ্রদানের শর্ত।</div></div>
+        <div class="card qa" data-q="Place স্থান বিতরণ চ্যানেল মজুদ অবস্থান লজিস্টিকস"><div class="qa-title">স্থান/বিতরণ (Place)</div><div class="qa-ans">চ্যানেল, মজুদ, অবস্থান, লজিস্টিকস।</div></div>
+        <div class="card qa" data-q="Promotion প্রচার বিজ্ঞাপন প্রমোশন পিআর ব্যক্তিগত বিক্রয়"><div class="qa-title">প্রচার (Promotion)</div><div class="qa-ans">বিজ্ঞাপন, সেলস প্রমোশন, পিআর, ব্যক্তিগত বিক্রয়।</div></div>
+        <div class="card qa" data-q="People মানুষ কর্মী বিক্রয়কর্মী সেবা সংস্কৃতি"><div class="qa-title">মানুষ (People)</div><div class="qa-ans">কর্মী, বিক্রয়কর্মী, সেবা-সংস্কৃতি।</div></div>
+        <div class="card qa" data-q="Process প্রক্রিয়া সেবা প্রদান অর্ডার ডেলিভারি"><div class="qa-title">প্রক্রিয়া (Process)</div><div class="qa-ans">সেবা প্রদান/অর্ডার-ডেলিভারি ধাপসমূহ।</div></div>
+        <div class="card qa" data-q="Physical Evidence দৃশ্যমান প্রমাণ স্টোর ওয়েবসাইট নকশা পরিবেশ বিশ্বাস"><div class="qa-title">দৃশ্যমান প্রমাণ (Physical Evidence)</div><div class="qa-ans">স্টোর/ওয়েবসাইট, নকশা, পরিবেশ—যা বিশ্বাস তৈরি করে।</div></div>
+      </div>
+    </section>
+
+    <section id="plc">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-pkg"/></svg></span>
+        <h2>পণ্যের জীবনচক্রের স্তর</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="সূচনা পরিচিতি কম বিক্রি প্রচারণা বেশি মূল্য উচ্চ"><div class="qa-title">সূচনা</div><div class="qa-ans">নতুন পণ্য; কম বিক্রি, প্রচারণা বেশি, মূল্য তুলনামূলক উচ্চ।</div></div>
+        <div class="card qa" data-q="প্রবৃদ্ধি চাহিদা বাড়ে প্রতিযোগী লাভ বৃদ্ধি"><div class="qa-title">প্রবৃদ্ধি</div><div class="qa-ans">চাহিদা দ্রুত বাড়ে; প্রতিযোগী বাড়ে; লাভ বৃদ্ধি।</div></div>
+        <div class="card qa" data-q="পরিপক্বতা বিক্রি স্থিত শিখর পার্থক্যকরণ মূল্য প্রতিযোগিতা"><div class="qa-title">পরিপক্বতা</div><div class="qa-ans">বিক্রি স্থিত/শিখরে; পার্থক্যকরণ ও মূল্য-প্রতিযোগিতা তীব্র।</div></div>
+        <div class="card qa" data-q="পতন চাহিদা হ্রাস লাইন ছাঁটাই মূল্য হ্রাস বিনিয়োগ প্রত্যাহার"><div class="qa-title">পতন</div><div class="qa-ans">চাহিদা হ্রাস; লাইন-ছাঁটাই/মূল্য-হ্রাস/বিনিয়োগ প্রত্যাহার।</div></div>
+      </div>
+    </section>
+
+    <section id="consumer-channels">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-route"/></svg></span>
+        <h2>ভোগ্যপণ্যের বিতরণ প্রণালি (চ্যানেল)</h2>
+      </div>
+      <div class="card">
+        <div class="pills">
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → ভোক্তা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → খুচরা বিক্রেতা → ভোক্তা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → পাইকার → খুচরা বিক্রেতা → ভোক্তা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → এজেন্ট/দালাল → ভোক্তা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → এজেন্ট/দালাল → খুচরা বিক্রেতা → ভোক্তা</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="industrial-channels">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-factory"/></svg></span>
+        <h2>শিল্পপণ্যের বিতরণ প্রণালি</h2>
+      </div>
+      <div class="card">
+        <div class="pills">
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → শিল্পপণ্যের ক্রেতা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → এজেন্ট → শিল্পপণ্যের ক্রেতা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → ডিলার → শিল্পপণ্যের ক্রেতা</span>
+          <span class="flow-pill"><svg width="16" height="16"><use href="#i-pointer"/></svg> উৎপাদক → এজেন্ট → ডিস্ট্রিবিউটর → শিল্পপণ্যের ক্রেতা</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEW SECTIONS YOU ASKED ===== -->
+    <section id="crm">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-hand"/></svg></span>
+        <h2>CRM কী?</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="CRM Customer Relationship Management গ্রাহক সম্পর্ক ব্যবস্থাপনা"><div class="qa-title">Customer Relationship Management (CRM)</div><div class="qa-ans">গ্রাহকের তথ্য, যোগাযোগ ও সেবাকে সমন্বিতভাবে পরিচালনার কৌশল ও সফটওয়্যার—যার লক্ষ্য দীর্ঘমেয়াদে সম্পর্ক, সন্তুষ্টি ও মূল্য বৃদ্ধি।</div></div>
+      </div>
+    </section>
+
+    <section id="new-pricing">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-star"/></svg></span>
+        <h2>নতুন পণ্যের মূল্য নির্ধারণ কৌশল</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="উদ্ভাবনমূলক নতুন পণ্য মূল্য নির্ধারণ স্কিমিং প্রিমিয়াম"><div class="qa-title">নতুন উদ্ভাবনমূলক পণ্যের মূল্য নির্ধারণ</div><div class="qa-ans">নবত্ব ও বাড়তি মানের ভিত্তিতে তুলনামূলক উচ্চ মূল্য; প্রাথমিকভাবে স্কিমিং/প্রিমিয়াম কৌশল কার্যকর।</div></div>
+        <div class="card qa" data-q="বাজারে নতুন প্রবেশ পণ্য মূল্য নির্ধারণ পেনিট্রেশন"><div class="qa-title">বাজারে নতুন প্রবেশ পণ্যের মূল্য নির্ধারণ</div><div class="qa-ans">দ্রুত বাজার-দখলে তুলনামূলক কম দাম; পেনিট্রেশন প্রাইসিং ব্যবহার।</div></div>
+        <div class="card qa" data-q="অনুকরণমূলক নতুন পণ্য মূল্য নির্ধারণ প্রতিযোগী সমমান"><div class="qa-title">অনুকরণমূলক নতুন পণ্যের মূল্য নির্ধারণ</div><div class="qa-ans">বিকল্প/সমমান পণ্যের দামের সাথে সামঞ্জস্য রেখে মূল্য নির্ধারণ।</div></div>
+        <div class="card qa" data-q="প্রতিযোগিতামূলক মূল্য নির্ধারণ বাজারভিত্তিক মূল্য"><div class="qa-title">প্রতিযোগিতামূলক মূল্য নির্ধারণ</div><div class="qa-ans">প্রতিদ্বন্দ্বীর অফার, খরচ ও চাহিদা বিবেচনায় বাজারভিত্তিক ন্যায্য দাম।</div></div>
+      </div>
+    </section>
+
+    <section id="branding-elements">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-star"/></svg></span>
+        <h2>ব্র্যান্ডিং-এর ৫টি উপাদান</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="brand logo লোগো পরিচিতি"><div class="qa-title">ব্র্যান্ড লোগো</div><div class="qa-ans">দৃশ্যমান পরিচিতির মূল চিহ্ন; দ্রুত মনে রাখে।</div></div>
+        <div class="card qa" data-q="brand name নাম স্মরণযোগ্যতা"><div class="qa-title">ব্র্যান্ড নেম</div><div class="qa-ans">উচ্চারণে সহজ ও স্মরণযোগ্য নাম; পরিচিতি বাড়ায়।</div></div>
+        <div class="card qa" data-q="brander uddesho উদ্দেশ্য মিশন"><div class="qa-title">ব্র্যান্ডের উদ্দেশ্য</div><div class="qa-ans">কেন ও কার জন্য—ব্র্যান্ডের মিশন/অঙ্গীকার।</div></div>
+        <div class="card qa" data-q="brand message বার্তা ট্যাগলাইন"><div class="qa-title">ব্র্যান্ড মেসেজ</div><div class="qa-ans">ট্যাগলাইন/মূল প্রতিশ্রুতি—গ্রাহকের কাছে মূল্য ব্যাখ্যা।</div></div>
+        <div class="card qa" data-q="identity color typography নকশা"><div class="qa-title">ব্র্যান্ড পরিচয় উপকরণ</div><div class="qa-ans">রং, টাইপোগ্রাফি, ভিজ্যুয়াল স্টাইল—একীভূত সত্তা তৈরি করে।</div></div>
+      </div>
+    </section>
+
+    <section id="branding-importance">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-star"/></svg></span>
+        <h2>ব্র্যান্ডিং-এর ৬টি গুরুত্ব ও প্রয়োজনীয়তা</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="পরিচিতি বৃদ্ধি সহজে চেনা"><div class="qa-title">পণ্যের পরিচিতি বৃদ্ধি</div><div class="qa-ans">বাজারে সহজে চেনা যায়; শেলফে আলাদা দেখা যায়।</div></div>
+        <div class="card qa" data-q="গ্রাহকের আস্থা বিশ্বাসযোগ্যতা"><div class="qa-title">গ্রাহকের আস্থা অর্জন</div><div class="qa-ans">স্থিতিশীল মানচিত্র গড়ে তোলে; পুনঃক্রয় বাড়ায়।</div></div>
+        <div class="card qa" data-q="প্রতিযোগিতায় সুবিধা পার্থক্যকরণ"><div class="qa-title">প্রতিযোগিতায় সুবিধা</div><div class="qa-ans">পার্থক্যকরণে সহায়তা করে; বিকল্পের মধ্যে প্রাধান্য পায়।</div></div>
+        <div class="card qa" data-q="নিষ্ঠা ধরে রাখা loyalty"><div class="qa-title">দীর্ঘমেয়াদী গ্রাহক ধরে রাখা</div><div class="qa-ans">ব্র্যান্ড-নিষ্ঠা বা লয়্যালটি তৈরি করে।</div></div>
+        <div class="card qa" data-q="স্থায়িত্ব বাজারে টিকে থাকা"><div class="qa-title">বাজারে স্থায়িত্ব</div><div class="qa-ans">সময়ের সাথে টিকে থাকা ও প্রসার নিশ্চিত করে।</div></div>
+        <div class="card qa" data-q="অতিরিক্ত মুনাফা প্রিমিয়াম মূল্য"><div class="qa-title">অতিরিক্ত মুনাফা অর্জন</div><div class="qa-ans">প্রিমিয়াম মূল্য নেওয়ার সামর্থ্য বাড়ায়।</div></div>
+      </div>
+    </section>
+
+    <section id="purchase-steps">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-way"/></svg></span>
+        <h2>ক্রয় প্রক্রিয়ার ধাপ</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="চাহিদা শনাক্তকরণ সমস্যা সনাক্ত"><div class="qa-title">চাহিদা শনাক্তকরণ</div><div class="qa-ans">সমস্যা/প্রয়োজন বোঝা থেকে ক্রয়যাত্রা শুরু।</div></div>
+        <div class="card qa" data-q="তথ্য অনুসন্ধান সোর্স অনলাইন অফলাইন"><div class="qa-title">তথ্য অনুসন্ধান</div><div class="qa-ans">ব্যক্তিগত/বাণিজ্যিক/অনলাইন উৎস থেকে তথ্য সংগ্রহ।</div></div>
+        <div class="card qa" data-q="বিকল্প মূল্যায়ন মান মূল্য ফিচার তুলনা"><div class="qa-title">বিকল্প মূল্যায়ন</div><div class="qa-ans">বিভিন্ন ব্র্যান্ড/ফিচারের তুলনা ও অগ্রাধিকার নির্ধারণ।</div></div>
+        <div class="card qa" data-q="ক্রয় সিদ্ধান্ত কোথা থেকে কখন কীভাবে"><div class="qa-title">ক্রয় সিদ্ধান্ত</div><div class="qa-ans">কোথা থেকে, কখন, কীভাবে—চূড়ান্ত সিদ্ধান্ত গ্রহণ।</div></div>
+        <div class="card qa" data-q="ক্রয়োত্তর আচরণ সন্তুষ্টি মতামত পুনঃক্রয়"><div class="qa-title">ক্রয়োত্তর আচরণ</div><div class="qa-ans">সন্তুষ্টি/অসন্তুষ্টি; রিভিউ, রিটার্ন বা লয়্যালটি।</div></div>
+      </div>
+    </section>
+
+    <section id="green-marketing">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-leaf"/></svg></span>
+        <h2>গ্রিন মার্কেটিং-এর প্রয়োগক্ষেত্রসমূহ</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="পরিবেশবান্ধব মোড়ক প্যাকেজিং recyclable"><div class="qa-title">পরিবেশবান্ধব মোড়ক</div><div class="qa-ans">রিসাইক্লেবল/বায়োডিগ্রেডেবল উপকরণে মোড়ক।</div></div>
+        <div class="card qa" data-q="শক্তি সাশ্রয় প্রযুক্তি energy efficient"><div class="qa-title">শক্তি-সাশ্রয়ী প্রযুক্তি ব্যবহার</div><div class="qa-ans">উৎপাদন ও ব্যবহারে এনার্জি-এফিশিয়েন্সি বৃদ্ধি।</div></div>
+        <div class="card qa" data-q="বর্জ্য ব্যবস্থাপনা reduce reuse recycle"><div class="qa-title">বর্জ্য ব্যবস্থাপনা</div><div class="qa-ans">Reduce–Reuse–Recycle নীতির প্রয়োগ।</div></div>
+        <div class="card qa" data-q="সচেতনতা বিজ্ঞাপন প্রচার green campaign"><div class="qa-title">সচেতনতামূলক বিজ্ঞাপন</div><div class="qa-ans">সবুজ আচরণে উৎসাহিত করতে ক্যাম্পেইন।</div></div>
+        <div class="card qa" data-q="পরিবেশবান্ধব পরিবহন logistics"><div class="qa-title">পরিবেশবান্ধব পরিবহন</div><div class="qa-ans">লো-এমিশন লজিস্টিকস ও সাপ্লাই-চেইন।</div></div>
+      </div>
+    </section>
+
+    <section id="ethics">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-shield"/></svg></span>
+        <h2>নৈতিক বিপণনের নীতি (১ লাইনে)</h2>
+      </div>
+      <div class="qa-grid">
+        <div class="card qa" data-q="নৈতিক বিপণনে কল্যাণ গ্রাহক সমাজ"><div class="qa-title">নৈতিক বিপণনে</div><div class="qa-ans">গ্রাহক ও সমাজের কল্যাণে সব কার্যক্রম পরিচালনা।</div></div>
+        <div class="card qa" data-q="ন্যায্যতা সমান সুযোগ বৈষম্যহীনতা"><div class="qa-title">ন্যায্যতা</div><div class="qa-ans">সকল গ্রাহকের জন্য সমান সুযোগ ও বৈষম্যহীন আচরণ।</div></div>
+        <div class="card qa" data-q="সততা সত্যতা বিভ্রান্তিমুক্ত"><div class="qa-title">সততা</div><div class="qa-ans">বার্তা ও অফারে সত্যতা রাখা; বিভ্রান্তি নয়।</div></div>
+        <div class="card qa" data-q="দায়িত্ব সামাজিক পরিবেশগত"><div class="qa-title">দায়িত্ব</div><div class="qa-ans">সামাজিক ও পরিবেশগত প্রভাবের দায় গ্রহণ।</div></div>
+        <div class="card qa" data-q="স্বচ্ছতা উন্মুক্ত নীতি তথ্য প্রকাশ"><div class="qa-title">স্বচ্ছতা</div><div class="qa-ans">নীতিমালা ও ব্যয়ের তথ্য উন্মুক্তভাবে উপস্থাপন।</div></div>
+      </div>
+    </section>
+
+    <!-- Mnemonic -->
+    <section id="mnemonic">
+      <div class="sec-head">
+        <span class="icon-badge"><svg width="22" height="22"><use href="#i-book"/></svg></span>
+        <h2>স্মরণীয়ভাবে</h2>
+      </div>
+      <div class="card">
+        <div>
+          <p><strong>মাইক্রো পরিবেশ:</strong> “প্রস-ম-ক্র-প্র-জন” → <em>প্রতিষ্ঠান, সরবরাহকারী, মধ্যস্থতাকারী, ক্রেতা, প্রতিযোগী, জনগোষ্ঠী</em>।</p>
+          <p><strong>ম্যাক্রো পরিবেশ:</strong> “জন-অর্থ-প্রাক-প্রযু-রাজ-সাং” → <em>জনসংখ্যা, অর্থনীতি, প্রাকৃতিক, প্রযুক্তি, রাজনৈতিক/আইনগত, সামাজিক-সাংস্কৃতিক</em>।</p>
+          <p><strong>7P:</strong> <em>পণ্য–মূল্য–স্থান–প্রচার–মানুষ–প্রক্রিয়া–দৃশ্যমান প্রমাণ</em>।</p>
+          <p><strong>PLC:</strong> <em>সূচনা → প্রবৃদ্ধি → পরিপক্বতা → পতন</em>।</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div class="subtitle">© <span id="year"></span> বিপণন প্রশ্নোত্তর — ভ্যানিলা HTML/CSS/JS</div>
+      <div class="tags">
+        <span class="tag">দ্রুত শেখা</span>
+        <span class="tag">পরীক্ষামুখী</span>
+        <span class="tag">রেসপনসিভ</span>
+        <span class="tag">ডার্ক মোড</span>
+        <span class="tag">কার্সর এফেক্ট</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Theme toggle (persist)
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const sun = document.getElementById('sun'); const moon = document.getElementById('moon');
+  const applyTheme = (v)=>{ root.classList.toggle('dark', v==='dark'); sun.style.display = v==='dark'?'inline':'none'; moon.style.display = v==='dark'?'none':'inline'; localStorage.setItem('theme', v); };
+  const stored = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
+  applyTheme(stored);
+  themeBtn.addEventListener('click', ()=> applyTheme(root.classList.contains('dark') ? 'light' : 'dark'));
+
+  // Cursor glow
+  const glow = document.getElementById('glow');
+  window.addEventListener('mousemove', (e)=> {
+    glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  });
+
+  // Accordion (toggle)
+  document.querySelectorAll('.qa').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      card.classList.toggle('open');
+    });
+  });
+
+  // Search
+  function filter(query){
+    const q = query.trim().toLowerCase();
+    // filter QA cards
+    document.querySelectorAll('.qa').forEach(el=>{
+      const hay = (el.dataset.q || el.textContent).toLowerCase();
+      el.style.display = hay.includes(q) ? '' : 'none';
+    });
+    // Show all flow pills always
+  }
+  const s1 = document.getElementById('searchInput');
+  const s2 = document.getElementById('mSearch');
+  [s1,s2].forEach(inp=>{
+    if(!inp) return;
+    inp.addEventListener('input', e=> filter(e.target.value));
+  });
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      const el = document.querySelector(id);
+      if(el){ e.preventDefault(); window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'}); }
+    });
+  });
+</script>
+</body>
+</html>
